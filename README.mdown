@@ -1,0 +1,3 @@
+# WASP - Lisp Without Any Superfluous Parentheses
+
+Word on the street is that the S stands for something else. The cake is a lie.
