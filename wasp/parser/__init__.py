@@ -47,8 +47,10 @@ def list(p):
     else:
         return box.Pair(p[0], p[1])
 
+
 lexer = lg.build()
 parser = pg.build()
+
 
 def parse(string):
     return parser.parse(lexer.lex(string))

@@ -1,5 +1,6 @@
 from rply.token import BaseBox
 
+
 class Quote(BaseBox):
     def __init__(self, sexpr):
         self.sexpr = sexpr
@@ -33,5 +34,3 @@ class Atom(BaseBox):
 
     def __str__(self):
         return "%s" % (self.atom)
-
-
