@@ -2,8 +2,6 @@ import wasp
 import wasp.parser
 import readline
 
-readline.parse_and_bind("tab: complete")
-
 
 class Reader(object):
     def __init__(self, prompt, banner=None):
@@ -25,6 +23,12 @@ class Reader(object):
 
 
 if __name__ == "__main__":
+    readline.parse_and_bind("tab: complete")
+
+    # TODO: autocomplete, someday
+    # http://stackoverflow.com/questions/5637124
+    #readline.set_completer(complete)
+
     for line in Reader(">> ", banner="WASP %s" % wasp.VERSION):
         if line == "" or line is None:
             continue
