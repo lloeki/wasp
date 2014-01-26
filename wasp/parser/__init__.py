@@ -18,8 +18,11 @@ pg = ParserGenerator(["QUOTE", "LPAREN", "RPAREN", "ATOM"],
 def error_handler(token):
     type = token.gettokentype()
     pos = token.getsourcepos()
-    raise ValueError("unexpected %s at (%s, %s)" %
-                     (type, pos.lineno, pos.colno))
+    if pos is None:
+        raise ValueError("unexpected %s" % type)
+    else:
+        raise ValueError("unexpected %s at (%s, %s)" %
+                        (type, pos.lineno, pos.colno))
 
 
 @pg.production("main : sexpr")

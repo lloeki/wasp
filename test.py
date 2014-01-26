@@ -36,6 +36,9 @@ class TestParser(TestCase):
         self.assertEqual(str(parser.parse("(+ '1 (* 3 2))")),
                          "(+ . ('1 . ((* . (3 . (2 . NIL))) . NIL)))")
 
+    def test_error_unclosed_list(self):
+        self.assertRaises(ValueError, parser.parse("(42"))
+
 
 if __name__ == '__main__':
     import unittest
