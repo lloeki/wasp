@@ -40,6 +40,12 @@ class TestParser(TestCase):
         self.assertRaises(ValueError, parser.parse("(42"))
 
 
+class TestAST(TestCase):
+    def test_lists_in_list(self):
+        ptree = parser.parse("(+ (* 4 5) (* 3 2))")
+        repr(ptree.ast())
+
+
 if __name__ == '__main__':
     import unittest
     unittest.main()

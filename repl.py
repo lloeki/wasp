@@ -1,5 +1,4 @@
 import wasp
-import wasp.parser
 import readline
 
 
@@ -29,21 +28,20 @@ if __name__ == "__main__":
     # http://stackoverflow.com/questions/5637124
     #readline.set_completer(complete)
 
+    context = wasp.Context()
+
     for line in Reader(">> ", banner="WASP %s" % wasp.VERSION):
         if line == "" or line is None:
             continue
 
         try:
-            ptree = wasp.parser.parse(line)
-        except ValueError, e:
+            ast = context['read'](line)
+        except wasp.lib.ReadError, e:
             print "Parse error:", e.message
             continue
 
-        print " ^ %s" % ptree
         try:
-            ast = ptree.ast()
-        except ValueError, e:
-            print "AST error:", e.message
+            print context['eval'](ast, context)
+        except wasp.SymbolError, e:
+            print "Undefined symbol:", e.message
             continue
-        print " ‡ %r" % ast
-        #ast.eval()

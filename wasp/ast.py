@@ -7,8 +7,8 @@ class List(Node):
         self.car = car
         self.cdr = cdr
 
-    def eval(self):
-        pass
+    def eval(self, context):
+        return context['apply'](self.car, self.cdr, context)
 
     def __repr__(self):
         return "<List %r %r>" % (self.car, self.cdr)
@@ -26,7 +26,7 @@ class Number(Atom):
     def __init__(self, value):
         self.value = value
 
-    def eval(self):
+    def eval(self, context):
         return self.value
 
     def __repr__(self):
@@ -45,8 +45,8 @@ class Symbol(Atom):
     def __init__(self, value):
         self.value = value
 
-    def eval(self):
-        return self.value
+    def eval(self, context):
+        return context[self.value]
 
     def __repr__(self):
         return "<Symbol %s>" % self.value
@@ -56,7 +56,7 @@ class String(Atom):
     def __init__(self, value):
         self.value = value
 
-    def eval(self):
+    def eval(self, context):
         return self.value
 
     def __repr__(self):
@@ -67,8 +67,8 @@ class Quote(Node):
     def __init__(self, sexpr):
         self.sexpr = sexpr
 
-    def eval(self):
-        return self.sexpr.eval()
+    def eval(self, context):
+        return context['quote'](self.sexpr)
 
     def __repr__(self):
         return "<Quote %r>" % self.sexpr
