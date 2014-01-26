@@ -36,10 +36,14 @@ if __name__ == "__main__":
         try:
             ptree = wasp.parser.parse(line)
         except ValueError, e:
-            print e.message
+            print "Parse error:", e.message
             continue
 
         print " ^ %s" % ptree
-        ast = ptree.ast()
+        try:
+            ast = ptree.ast()
+        except ValueError, e:
+            print "AST error:", e.message
+            continue
         print " ‡ %r" % ast
         #ast.eval()
