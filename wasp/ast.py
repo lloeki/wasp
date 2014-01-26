@@ -30,11 +30,37 @@ class Number(Atom):
         return self.value
 
     def __repr__(self):
-        return "<Number %s>" % self.value
+        return "<%s %s>" % (type(self).__name__, self.value)
+
+
+class Integer(Number):
+    pass
+
+
+class Float(Number):
+    pass
 
 
 class Symbol(Atom):
-    pass
+    def __init__(self, value):
+        self.value = value
+
+    def eval(self):
+        return self.value
+
+    def __repr__(self):
+        return "<Symbol %s>" % self.value
+
+
+class String(Atom):
+    def __init__(self, value):
+        self.value = value
+
+    def eval(self):
+        return self.value
+
+    def __repr__(self):
+        return "<String %s>" % self.value
 
 
 class Quote(Node):

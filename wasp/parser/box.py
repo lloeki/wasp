@@ -1,3 +1,4 @@
+import re
 from rply.token import BaseBox
 from wasp import ast
 
@@ -58,4 +59,14 @@ class Atom(BaseBox):
         return "%s" % (self.atom)
 
     def ast(self):
-        return ast.Number(int(self.atom))
+        if self.atom[0] == '"':
+            if self.atom[-1] == '"':
+                return ast.String(self.atom)
+            else:
+                raise ValueError("missing \"")
+        elif re.match(r'^\d+$', self.atom):
+            return ast.Integer(int(self.atom))
+        elif re.match(r'^\d+\.(\d+)$', self.atom):
+            return ast.Float(float(self.atom))
+        else:
+            return ast.Symbol(self.atom)
