@@ -29,19 +29,11 @@ class Pair(BaseBox):
             y = self.y
         return "(%s . %s)" % (self.x, y)
 
-    def _r_cdr(self, cdr):
-        if self.y is None:
-            return (self.x.ast(), )
-        else:
-            return cdr + (self.x.ast(), ) + self.y._r_cdr(cdr)
-
     def ast(self):
         car = self.x.ast()
 
         if self.y is None:
-            cdr = None
-        elif type(self.y) is Pair:
-            cdr = list(self.y._r_cdr(()))
+            cdr = ast.Nil()
         else:
             cdr = self.y.ast()
 

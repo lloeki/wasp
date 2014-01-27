@@ -1,4 +1,5 @@
 import wasp
+import wasp.ast
 import readline
 
 
@@ -35,13 +36,19 @@ if __name__ == "__main__":
             continue
 
         try:
-            ast = context['read'](line)
+            ast = context['read'](wasp.ast.String(line), context)
         except wasp.lib.ReadError, e:
             print "Parse error:", e.message
             continue
 
         try:
-            print context['eval'](ast, context)
+            result = context['eval'](ast, context)
         except wasp.SymbolError, e:
-            print "Undefined symbol:", e.message
+            print "Eval error:", e.message
+            continue
+
+        try:
+            context['print'](result, context)
+        except Exception, e:
+            print "Print error:", e.message
             continue

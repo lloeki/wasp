@@ -2,35 +2,70 @@ class Node(object):
     pass
 
 
-class List(Node):
-    def __init__(self, car, cdr=None):
-        self.car = car
-        self.cdr = cdr
-
-    def eval(self, context):
-        return context['apply'](self.car, self.cdr, context)
-
-    def __repr__(self):
-        return "<List %r %r>" % (self.car, self.cdr)
-
-
 class Atom(Node):
     pass
 
 
-class Operator(Node):
-    pass
+class Nil(Atom):
+    def __init__(self):
+        self.car = self
+        self.cdr = self
+
+    def iter(self):
+        return []
+
+    def __str__(self):
+        return "nil"
+
+    def __repr__(self):
+        return "<Nil>"
+
+
+class Truth(Atom):
+    def __init__(self, true=True):
+        self.true = true
+
+    def __str__(self):
+        return ("%s" % self.true).lower()
+
+    def __repr__(self):
+        return "<%s>" % self.true
+
+
+class List(Node):
+    def __init__(self, car, cdr=Nil()):
+        self.car = car
+        self.cdr = cdr
+
+    def iter(self):
+        car = self.car
+        cdr = self.cdr
+        while not type(cdr) is Nil:
+            yield car
+            car = cdr.car
+            cdr = cdr.cdr
+        else:
+            yield car
+
+    def __str__(self):
+        return "(%s)" % (' '.join(str(i) for i in self.iter()))
+
+    def __repr__(self):
+        return "<List %r %r>" % (self.car, self.cdr)
 
 
 class Number(Atom):
     def __init__(self, value):
         self.value = value
 
-    def eval(self, context):
-        return self.value
+    def __str__(self):
+        return "%s" % self.value
 
     def __repr__(self):
         return "<%s %s>" % (type(self).__name__, self.value)
+
+    def __eq__(self, other):
+        return self.value == other.value
 
 
 class Integer(Number):
@@ -42,37 +77,47 @@ class Float(Number):
 
 
 class Symbol(Atom):
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, name):
+        self.name = name
 
-    def eval(self, context):
-        return context[self.value]
+    def __str__(self):
+        return "%s" % self.name
 
     def __repr__(self):
-        return "<Symbol %s>" % self.value
+        return "<Symbol %s>" % self.name
 
 
 class String(Atom):
     def __init__(self, value):
         self.value = value
 
-    def eval(self, context):
-        return self.value
+    def __str__(self):
+        return '"%s"' % self.value
 
     def __repr__(self):
         return "<String %s>" % self.value
 
 
-class Quote(Node):
+class Quote(List):
     def __init__(self, sexpr):
-        self.sexpr = sexpr
+        self.car = Symbol('quote')
+        self.cdr = sexpr
+        self.sexpr = self.cdr
 
-    def eval(self, context):
-        return context['quote'](self.sexpr)
+    def __str__(self):
+        return "'%s" % self.sexpr
 
     def __repr__(self):
         return "<Quote %r>" % self.sexpr
 
 
 class Lambda(Node):
-    pass
+    def __init__(self, args, body):
+        self.args = args
+        self.body = body
+
+    def __str__(self):
+        return "lambda %s %s" % (self.args, self.body)
+
+    def __repr__(self):
+        return "<Lambda %r %r>" % (self.args, self.body)
